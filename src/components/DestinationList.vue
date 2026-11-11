@@ -1,13 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'                       // onMounted = wenn die Komponente auf der Seite ist
 import DestinationCard from './DestinationCard.vue'
 
-const destinations = ref([
-  { id: 1, city: 'Lissabon', country: 'Portugal', visited: false, plannedDate: '2027-05-12', budget: 800 },
-  { id: 2, city: 'Tokio', country: 'Japan', visited: false, plannedDate: '2027-10-01', budget: 2500 },
-  { id: 3, city: 'Kapstadt', country: 'Südafrika', visited: false, plannedDate: null, budget: 1800 },
-  { id: 4, city: 'Rom', country: 'Italien', visited: true, plannedDate: '2025-08-20', budget: 600 }
-])
+const destinations = ref([])                               // startet leer, Daten kommen vom Backend
+
+onMounted(async () => {                                    // läuft einmal beim Laden der Seite
+  const url = import.meta.env.VITE_BACKEND_BASE_URL + '/destinations'  // Adresse aus der .env-Datei
+  const response = await fetch(url)                        // GET-Anfrage ans Backend
+  destinations.value = await response.json()              // JSON-Antwort in die Liste schreiben
+})
 </script>
 
 <template>
